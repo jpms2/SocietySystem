@@ -475,6 +475,15 @@ th.desc a {
 	background: #ffffff;
 }
 
+.green {
+	color: green;
+
+}
+
+.red {
+	color: red;
+
+}
 th:hover, tr:hover {
 	background: #E1F2B6;
 }

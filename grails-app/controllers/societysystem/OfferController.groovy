@@ -8,7 +8,7 @@ import grails.transaction.Transactional
 @Transactional(readOnly = true)
 class OfferController {
 
-    static allowedMethods = [update: "PUT", delete: "DELETE"]
+    static allowedMethods = [update: "PUT"]
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
@@ -35,9 +35,9 @@ class OfferController {
         }
         offer.select()
         if (!offer.save(flush: true)) {
-            flash.message = "Offer could not be activated!\n" + vaga.errors
+            flash.message = "Offer could not be activated!\n" + offer.errors
         }
-        redirect(action: "overview")
+        redirect(action: "index")
     }
 
     def show(Offer offerInstance) {
@@ -59,7 +59,7 @@ class OfferController {
 
         if (offerInstance.hasErrors()) {
             respond offerInstance.errors, view:'create'
-            return
+            redi
         }
 
         offerInstance.save flush:true
@@ -108,6 +108,11 @@ class OfferController {
             return
         }
 
+        if (offerInstance.activated == true) {
+            alreadyActivated()
+            return
+        }
+
         offerInstance.delete flush:true
 
         request.withFormat {
@@ -123,6 +128,16 @@ class OfferController {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.not.found.message', args: [message(code: 'offer.label', default: 'Offer'), params.id])
+                redirect action: "index", method: "GET"
+            }
+            '*'{ render status: NOT_FOUND }
+        }
+    }
+
+    protected void alreadyActivated() {
+        request.withFormat {
+            form multipartForm {
+                flash.message = message(code: 'Active offers cannot be deleted', args: [message(code: 'offer.label', default: 'Offer'), params.id])
                 redirect action: "index", method: "GET"
             }
             '*'{ render status: NOT_FOUND }

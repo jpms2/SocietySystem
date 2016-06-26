@@ -14,9 +14,17 @@ class CreatePage extends Page{
 
     }
 
-    boolean createOffer(description) {
+    boolean createAndActivate(String description){
+        $("form").description = description
+        $("form").activated = true
+        $("input", name: "create").click()
+    }
+
+    boolean createOffer(String description) {
         $("form").description = description
         $("input", name: "create").click()
     }
+
+
 
 }

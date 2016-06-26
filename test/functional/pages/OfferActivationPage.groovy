@@ -21,8 +21,12 @@ class OfferActivationPage extends Page{
         $("a",text: offerDesc).click()
     }
 
-    boolean offerIsActivated(offerDesc){
+    boolean offerIsActivated(String offerDesc){
+        $("tr", class: "green").has("a",text: offerDesc)
+    }
 
+    boolean check(String description){
+        $("tr", class: "green").has("a",text: description)
     }
 
 

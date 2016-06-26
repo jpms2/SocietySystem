@@ -2,6 +2,7 @@ package steps
 
 import pages.CreatePage
 import pages.OfferActivationPage
+import pages.OfferEditPage
 import pages.SocietySettingsPage
 import societysystem.Offer
 import societysystem.OfferController
@@ -79,6 +80,27 @@ When(~'^I try to delete the offer "([^"]*)"$'){ String offerDesc ->
 Then(~'^The system will not delete the offer "([^"]*)"$'){ String offerDesc ->
     assert Offer.findByDescription(offerDesc) != null
 
+}
+
+Given (~'^The offer "([^"]*)" exists and it is activated$'){ String offerDesc ->
+    to CreatePage
+    at CreatePage
+    page.createAndActivate(offerDesc)
+}
+
+And(~'^i am at "([^"]*)" page$'){ String erro-> //precisei parametrizar por causa de um erro de ariaty mismatch que não consegui resolver
+    to OfferEditPage
+    at OfferEditPage
+}
+When (~'^i try to delete$'){ ->
+    at OfferEditPage
+    page.deleteOffer()
+}
+
+Then(~'^the offer "([^"]*)" will not be deleted$') { String offerDesc ->
+    to OfferActivationPage
+    at OfferActivationPage
+    page.check(offerDesc)
 }
 
 
